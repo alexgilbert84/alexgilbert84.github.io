@@ -278,7 +278,7 @@ $(document).ready(function () {
   <a href="index.html">Home</a>
 </li>
 <li>
-  <a href="budweiser-growth-plan-final-version.html">Beer Case Study</a>
+  <a href="Budweiser-Growth-Plan-Final-Version.html">Beer Case Study</a>
 </li>
 <li>
   <a href="about.html">About</a>
@@ -417,35 +417,35 @@ t</code></pre>
 brewbeers = merge(breweries, beers, by =&quot;Brewery_id&quot;)
 
 head(brewbeers, n=6)</code></pre>
-<pre><code>##   Brewery_id            Name.x        City State        Name.y Beer_ID   ABV
-## 1          1 NorthGate Brewing Minneapolis    MN       Pumpion    2689 0.060
-## 2          1 NorthGate Brewing Minneapolis    MN    Stronghold    2688 0.060
-## 3          1 NorthGate Brewing Minneapolis    MN   Parapet ESB    2687 0.056
-## 4          1 NorthGate Brewing Minneapolis    MN  Get Together    2692 0.045
-## 5          1 NorthGate Brewing Minneapolis    MN Maggie&#39;s Leap    2691 0.049
-## 6          1 NorthGate Brewing Minneapolis    MN    Wall&#39;s End    2690 0.048
-##   IBU                               Style Ounces
-## 1  38                         Pumpkin Ale     16
-## 2  25                     American Porter     16
-## 3  47 Extra Special / Strong Bitter (ESB)     16
-## 4  50                        American IPA     16
-## 5  26                  Milk / Sweet Stout     16
-## 6  19                   English Brown Ale     16</code></pre>
+<pre><code>##   Brewery_id            Name.x        City State        Name.y Beer_ID   ABV IBU
+## 1          1 NorthGate Brewing Minneapolis    MN       Pumpion    2689 0.060  38
+## 2          1 NorthGate Brewing Minneapolis    MN    Stronghold    2688 0.060  25
+## 3          1 NorthGate Brewing Minneapolis    MN   Parapet ESB    2687 0.056  47
+## 4          1 NorthGate Brewing Minneapolis    MN  Get Together    2692 0.045  50
+## 5          1 NorthGate Brewing Minneapolis    MN Maggie&#39;s Leap    2691 0.049  26
+## 6          1 NorthGate Brewing Minneapolis    MN    Wall&#39;s End    2690 0.048  19
+##                                 Style Ounces
+## 1                         Pumpkin Ale     16
+## 2                     American Porter     16
+## 3 Extra Special / Strong Bitter (ESB)     16
+## 4                        American IPA     16
+## 5                  Milk / Sweet Stout     16
+## 6                   English Brown Ale     16</code></pre>
 <pre class="r"><code>tail(brewbeers, n=6)</code></pre>
-<pre><code>##      Brewery_id                        Name.x          City State
-## 2405        556         Ukiah Brewing Company         Ukiah    CA
-## 2406        557       Butternuts Beer and Ale Garrattsville    NY
-## 2407        557       Butternuts Beer and Ale Garrattsville    NY
-## 2408        557       Butternuts Beer and Ale Garrattsville    NY
-## 2409        557       Butternuts Beer and Ale Garrattsville    NY
-## 2410        558 Sleeping Lady Brewing Company     Anchorage    AK
-##                         Name.y Beer_ID   ABV IBU                   Style Ounces
-## 2405             Pilsner Ukiah      98 0.055  NA         German Pilsener     12
-## 2406         Porkslap Pale Ale      49 0.043  NA American Pale Ale (APA)     12
-## 2407           Snapperhead IPA      51 0.068  NA            American IPA     12
-## 2408         Moo Thunder Stout      50 0.049  NA      Milk / Sweet Stout     12
-## 2409  Heinnieweisse Weissebier      52 0.049  NA              Hefeweizen     12
-## 2410 Urban Wilderness Pale Ale      30 0.049  NA        English Pale Ale     12</code></pre>
+<pre><code>##      Brewery_id                        Name.x          City State                    Name.y Beer_ID
+## 2405        556         Ukiah Brewing Company         Ukiah    CA             Pilsner Ukiah      98
+## 2406        557       Butternuts Beer and Ale Garrattsville    NY         Porkslap Pale Ale      49
+## 2407        557       Butternuts Beer and Ale Garrattsville    NY           Snapperhead IPA      51
+## 2408        557       Butternuts Beer and Ale Garrattsville    NY         Moo Thunder Stout      50
+## 2409        557       Butternuts Beer and Ale Garrattsville    NY  Heinnieweisse Weissebier      52
+## 2410        558 Sleeping Lady Brewing Company     Anchorage    AK Urban Wilderness Pale Ale      30
+##        ABV IBU                   Style Ounces
+## 2405 0.055  NA         German Pilsener     12
+## 2406 0.043  NA American Pale Ale (APA)     12
+## 2407 0.068  NA            American IPA     12
+## 2408 0.049  NA      Milk / Sweet Stout     12
+## 2409 0.049  NA              Hefeweizen     12
+## 2410 0.049  NA        English Pale Ale     12</code></pre>
 </div>
 <div id="analysis-question-3-address-the-missing-values-in-each-column" class="section level4">
 <h4>Analysis Question # 3 – Address the missing values in each column</h4>
@@ -461,12 +461,10 @@ bbcomplete &lt;- na.omit(brewbeers)</code></pre>
 <h3>Analysis Question # 1 – How many breweries are in each state?</h3>
 <pre class="r"><code>table(bbcomplete$State)</code></pre>
 <pre><code>## 
-##  AK  AL  AR  AZ  CA  CO  CT  DC  DE  FL  GA  HI  IA  ID  IL  IN  KS  KY  LA  MA 
-##  17   9   1  23 135 146   6   4   1  37   7  18  25  17  39  91  19  14  10  51 
-##  MD  ME  MI  MN  MO  MS  MT  NC  ND  NE  NH  NJ  NM  NV  NY  OH  OK  OR  PA  RI 
-##  10   7  38  46  29  11  23  30   3   9   2   8   6   8  46  32  11  87  47  20 
-##  SC  TN  TX  UT  VA  VT  WA  WI  WV  WY 
-##   5   5  88  11  35  17  43  42   2  12</code></pre>
+##  AK  AL  AR  AZ  CA  CO  CT  DC  DE  FL  GA  HI  IA  ID  IL  IN  KS  KY  LA  MA  MD  ME  MI  MN  MO  MS 
+##  17   9   1  23 135 146   6   4   1  37   7  18  25  17  39  91  19  14  10  51  10   7  38  46  29  11 
+##  MT  NC  ND  NE  NH  NJ  NM  NV  NY  OH  OK  OR  PA  RI  SC  TN  TX  UT  VA  VT  WA  WI  WV  WY 
+##  23  30   3   9   2   8   6   8  46  32  11  87  47  20   5   5  88  11  35  17  43  42   2  12</code></pre>
 <pre class="r"><code>as.data.frame(table(bbcomplete$State))</code></pre>
 <pre><code>##    Var1 Freq
 ## 1    AK   17
@@ -647,15 +645,15 @@ plot_grid(
 <div id="analysis-question-5-which-state-has-the-maximum-alcoholic-abv-beer-which-state-has-the-most-bitter-ibu-beer" class="section level3">
 <h3>Analysis Question # 5 – Which state has the maximum alcoholic (ABV) beer? Which state has the most bitter (IBU) beer?</h3>
 <pre class="r"><code>bbcomplete[which.max(bbcomplete$ABV),]  #strange-- I am getting ID2 KY but in another example I am getting CO</code></pre>
-<pre><code>##   Brewery_id                    Name.x       City State         Name.y Beer_ID
-## 9          2 Against the Grain Brewery Louisville    KY London Balling    2685
-##     ABV IBU              Style Ounces
-## 9 0.125  80 English Barleywine     16</code></pre>
+<pre><code>##   Brewery_id                    Name.x       City State         Name.y Beer_ID   ABV IBU
+## 9          2 Against the Grain Brewery Louisville    KY London Balling    2685 0.125  80
+##                Style Ounces
+## 9 English Barleywine     16</code></pre>
 <pre class="r"><code>bbcomplete[which.max(bbcomplete$IBU),]</code></pre>
-<pre><code>##      Brewery_id                  Name.x    City State                    Name.y
-## 1857        375 Astoria Brewing Company Astoria    OR Bitter Bitch Imperial IPA
-##      Beer_ID   ABV IBU                          Style Ounces
-## 1857     980 0.082 138 American Double / Imperial IPA     12</code></pre>
+<pre><code>##      Brewery_id                  Name.x    City State                    Name.y Beer_ID   ABV IBU
+## 1857        375 Astoria Brewing Company Astoria    OR Bitter Bitch Imperial IPA     980 0.082 138
+##                               Style Ounces
+## 1857 American Double / Imperial IPA     12</code></pre>
 </div>
 <div id="analysis-question-6-comment-on-summary-stats-and-distribution-of-abv" class="section level3">
 <h3>Analysis Question # 6 – Comment on summary stats and distribution of ABV</h3>
@@ -719,7 +717,7 @@ plot(seq(1,numks,1),MeanAcc, type = &quot;l&quot;)</code></pre>
 <pre class="r"><code>which.max(MeanAcc)</code></pre>
 <pre><code>## [1] 5</code></pre>
 <pre class="r"><code>max(MeanAcc)</code></pre>
-<pre><code>## [1] 0.8574205</code></pre>
+<pre><code>## [1] 0.8595406</code></pre>
 <pre class="r"><code>## Explanation: KNN is x% accurate in explaining the classification of IPA or other Ale by using only the IBU and ABV.
 ## It correctly identifies positive values x% of the time (sensitivity) and correctly identifies negative values x% of the time (sensitivity).
 ## We believe this is a viable and economic method of classifying beers for our study.
@@ -729,8 +727,8 @@ classifications = knn(train[,c(7,8)],test[,c(7,8)],as.factor(train$aleType), pro
     table(as.factor(test$aleType),classifications)</code></pre>
 <pre><code>##      classifications
 ##       Ale IPA
-##   Ale 136  25
-##   IPA  16 106</code></pre>
+##   Ale 142  17
+##   IPA  21 103</code></pre>
 <pre class="r"><code>    CM = confusionMatrix(table(as.factor(test$aleType),classifications))</code></pre>
 </div>
 <div id="analysis-question-9-recommend-an-acquisition" class="section level3">
