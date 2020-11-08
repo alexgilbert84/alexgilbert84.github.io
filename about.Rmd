@@ -1,0 +1,30 @@
+---
+title: "About"
+author: "Alex"
+date: "11/8/2020"
+output: html_document
+---
+
+# Alex Gilbert
+
+![Picture of Alex](D:/School/Courses/Doing Data Science/Projects/New New/Alex Professional 2.jpg){width=200 height=300px}
+
+## From Philadelphia, PA
+
+## Things I enjoy: Rugby, Punk Rock, Video Games
+
+## Where I work: Currently looking for work
+
+## Education:
+
+### School: Southern Methodist University
+#### Program: Master of Science in Data Science
+
+### School: Villanova University
+#### Program: Master of Business Administration
+
+### School: Rutgers University
+#### Program: Bachelor of Arts in Psychology and Philosophy
+
+
+The other tabs represent work/analyses I have completed. Please check them out!

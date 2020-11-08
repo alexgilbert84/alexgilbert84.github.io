@@ -1,0 +1,249 @@
+---
+title: "Growth Opportunities for Budweiser"
+author: "Alex Gilbert and Yves Hughes"
+date: "10/23/2020"
+output: html_document
+---
+
+This file contains the code and partial analysis of the "Brewery" and "Beer" data sets as provided by the executive suite of Budweiser. The purpose of this analysis is to make recommendations to the CEO and CFO on potential growth strategy including brewery acquisitions. The analysis also includes an explanation of assumptions, drawbacks of the methodology, and opportunities for future analysis.
+
+Important note about the data:
+
+Data about IBU and ABV was incomplete so generalizations had to be made about the data. There is a description below about the various methodologies conceived and attempted, but in the end it was determined to omit rows with missing values. We found this to give the truest account of the most important factors. 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load Library Dependencies
+```{r}
+library(readr)
+library(dplyr)
+library(magrittr)
+library(ggplot2)
+library(class)
+library(caret)
+library(cowplot)
+library(forcats)
+library(readr)
+
+```
+
+## Load initial data
+```{r}
+
+urlfile="https://raw.githubusercontent.com/alexgilbert84/DDSCaseStudy1/main/Data%20Sources/Beers.csv"
+
+beers<-read_csv(url(urlfile))
+
+urlfile2="https://raw.githubusercontent.com/alexgilbert84/DDSCaseStudy1/main/Data%20Sources/Breweries.csv"
+
+breweries<-read_csv(url(urlfile2))
+
+###  Viewed as table, visualization may not be required for this, just the count.
+
+b = table(breweries$State)
+t = as.data.frame(b)
+names(t)[1] = 'State'
+t
+```
+
+
+####   Analysis Question # 2 -- Merge beer data with the breweries data. Print first 6 and last 6
+```{r}
+colnames(breweries)[1] = "Brewery_id"
+
+brewbeers = merge(breweries, beers, by ="Brewery_id")
+
+head(brewbeers, n=6)
+tail(brewbeers, n=6)
+```
+
+####  Analysis Question # 3 --  Address the missing values in each column
+
+Our initial thoughts were that dropping missing values would leave out too much important information. We immediately attempted to use the KNN method to predict missing values. We found it impossible as we did not have enough explanatory, numeric values to utilize.
+
+We then moved on methodologies that used 1) a median value or 2) a random value. In each of these cases we found the results to skew the date too much towards the chosen number due to the fact that there was such a high number of missing values.
+
+In the end, we found that dropping the beers with missing data altogether was the best decision. Although it reduced the number of data points, we felt that the ABV and IBU were the data points on which we most relied on accuracy for our questions of interest, and imputing those values would do our study an injustice. 
+
+The other potential methodology we considered was calculating the median value of IBU and ABV for each style of beer and replacing missing values with the relevant median. Unfortunately, due to time constraints, we did not employ this method.
+
+```{r}
+# create new dataset without missing data
+
+bbcomplete <- na.omit(brewbeers)
+
+
+```
+
+
+### Analysis Question # 1 -- How many breweries are in each state?
+```{r}
+table(bbcomplete$State)
+as.data.frame(table(bbcomplete$State))
+arrange(t,Freq)
+```
+
+#### Analysis Question # 4 -- Not complete -- barplot(bbcomplete$IBU, State = bbcomplete$State) ## !!Need to barplot this
+```{r}
+bbcomplete %>% group_by(State) %>% summarize(medianABV=median(ABV), medianIBU=median(IBU))
+
+bbmedians <- bbcomplete %>% group_by(State) %>% summarize(medianABV=median(ABV), medianIBU=median(IBU))
+
+# Dot plot of medians
+
+bbmedians %>% ggplot(aes(x=medianABV,y = medianIBU, color = State)) + 
+  geom_point() + 
+  guides(color=FALSE) + 
+  ggtitle("Median ABV vs Median IBU to show correlation") + 
+  labs(x = "Median ABV by State", y = "Median IBU by State")
+
+# Lollipop plot of ABV by State
+
+lolliABV <- bbmedians %>% mutate(State = fct_reorder(State, medianABV)) %>% ggplot(aes(x = State, y = medianABV, color = State, sort = "ascending", add = "segments")) + 
+  geom_point(stat='identity') + 
+  coord_flip() +
+  geom_segment(aes(x=State, xend=State, y = 0, yend=medianABV)) + 
+  guides(color=FALSE)
+
+
+# Lollipop plot of IBU by State
+
+lolliIBU <- bbmedians %>% mutate(State = fct_reorder(State, medianABV)) %>% ggplot(aes(x = State, y = medianIBU, color = State, sort = "ascending", add = "segments")) + 
+  geom_point(stat='identity') + 
+  coord_flip() +
+  geom_segment(aes(x=State, xend=State, y = 0, yend=medianIBU)) + 
+  guides(color=FALSE) +
+  theme(axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+
+plot_row <- plot_grid(lolliABV,lolliIBU)
+
+
+title <- ggdraw() +
+  draw_label(
+    "Median ABV and Median IBU by State",
+    fontface = 'bold',
+    x = 0,
+    hjust = 0
+  ) +
+  theme(
+    # add margin on the left of the drawing canvas,
+    # so title is aligned with left edge of first plot
+    plot.margin = margin(0, 0, 0, 7)
+  )
+plot_grid(
+  title, plot_row,
+  ncol = 1,
+  # rel_heights values control vertical title margins
+  rel_heights = c(0.1, 1)
+)
+```
+
+
+
+### Analysis Question # 5 -- Which state has the maximum alcoholic (ABV) beer? Which state has the most bitter (IBU) beer?
+```{r}
+bbcomplete[which.max(bbcomplete$ABV),]  #strange-- I am getting ID2 KY but in another example I am getting CO
+bbcomplete[which.max(bbcomplete$IBU),]
+```
+
+
+### Analysis Question # 6 -- Comment on summary stats and distribution of ABV
+```{r}
+bbcomplete %>% ggplot(aes(x = ABV)) + 
+  geom_histogram() + 
+  ggthemes::theme_wsj() + 
+  ggtitle("Frequency of each ABV") + 
+  theme(axis.title = element_text()) + ylab('Count')
+
+# There is a slight right-skewed distribution of ABV in beers. The large majority of beers have an ABV within .04 and .07.
+# There are very few beers that have below .04 ABV, but there seems to be limited popularity of beers as high as .1, with
+# several specialty beers around .12 ABV.
+```
+
+
+### Analysis Question # 7 -- Relationship between IBU and ABV scatter plot.
+```{r}
+bbcomplete %>% ggplot(aes(x=ABV, y=IBU, color=IBU)) + 
+  geom_point() + 
+  geom_smooth() + 
+  ggtitle("Scatterplot of ABV vs IBU")
+```
+
+
+
+### Analysis Question # 8 -- IBU vs ABV with IPA and other "Ale" using KNN classification
+```{r}
+## Methodology, need to determine how to classify different types of Ale based on their IBU and ABV
+
+# Create "ales" data frame based on only beers that contain the word "Ale" or "IPA"
+
+ales <- filter(bbcomplete, grepl('Ale|IPA',Style))
+
+ales2 <- ales %>% mutate(aleType = ifelse(grepl('IPA',Style),"IPA","Ale"))
+
+## Test best value for K
+
+splitPerc = .7
+iterations = 100
+numks = 60
+masterAcc = matrix(nrow = iterations, ncol = numks)
+
+for(j in 1:iterations)
+{
+  accs = data.frame(accuracy = numeric(60), k = numeric(60))
+  trainIndices = sample(1:dim(ales2)[1],round(splitPerc * dim(ales2)[1]))
+  train = ales2[trainIndices,]
+  test = ales2[-trainIndices,]
+  for(i in 1:numks)
+  {
+    classifications = knn(train[,c(7,8)],test[,c(7,8)],as.factor(train$aleType), prob = TRUE, k = i)
+    table(as.factor(test$aleType),classifications)
+    CM = confusionMatrix(table(as.factor(test$aleType),classifications))
+    masterAcc[j,i] = CM$overall[1]
+  }
+  
+}
+
+MeanAcc = colMeans(masterAcc)
+
+plot(seq(1,numks,1),MeanAcc, type = "l")
+which.max(MeanAcc)
+max(MeanAcc)
+
+## Explanation: KNN is x% accurate in explaining the classification of IPA or other Ale by using only the IBU and ABV.
+## It correctly identifies positive values x% of the time (sensitivity) and correctly identifies negative values x% of the time (sensitivity).
+## We believe this is a viable and economic method of classifying beers for our study.
+
+## Build confusion matrix at best k value (k = 5)
+classifications = knn(train[,c(7,8)],test[,c(7,8)],as.factor(train$aleType), prob = TRUE, k = 5)
+    table(as.factor(test$aleType),classifications)
+    CM = confusionMatrix(table(as.factor(test$aleType),classifications))
+
+
+```
+
+### Analysis Question # 9 -- Recommend an Acquisition
+
+```{r}
+
+# Identify most popular styles of beer in the most popular brewing states
+
+CObrews <- bbcomplete %>% filter(State == "CO")
+CObrewsdf <- as.data.frame(table(CObrews$Style))
+arrange(CObrewsdf,Freq,desc(Freq))
+
+Calibrews <- bbcomplete %>% filter(State == "CA")
+Calibrewsdf <- as.data.frame(table(Calibrews$Style))
+arrange(Calibrewsdf,Freq,desc(Freq))
+
+# Identify the brewery in a small state that makes those beers
+
+NDbrews <- bbcomplete %>% filter(State == "ND")
+NDbrewsdf <- as.data.frame(table(NDbrews$Style))
+arrange(NDbrewsdf,Freq,desc(Freq))
+
+```

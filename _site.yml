@@ -4,3 +4,7 @@ navbar:
   left:
     - text: "Home"
       href: index.html
+    - text: "Beer Case Study"
+      href: budweiser-growth-plan-final-version.html
+    - text: "About"
+      href: about.html
