@@ -4,3 +4,5 @@ navbar:
   left:
     - text: "Home"
       href: index.html
+    - text: "DDSAnalytics Project"
+      href: DDSAnalytics-Attrition-and-Monthly-Income-Analysis-Alex-Gilbert.html
